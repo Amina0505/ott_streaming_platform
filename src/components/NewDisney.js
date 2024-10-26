@@ -36,7 +36,7 @@ const Container = styled.div`
 
 const Content = styled.div`
   display: flex;
-  gap: 25px;
+  gap: 15px;
   overflow-x: auto; /* Enable horizontal scrolling */
   padding: 10px 0;
   scroll-behavior: smooth; /* Smooth scrolling */
@@ -53,8 +53,8 @@ const Content = styled.div`
 
 const Wrap = styled.div`
   flex: 0 0 auto; /* Prevent wrapping */
-  width: 200px; /* Fixed width for movie cards */
-  height: 300px; /* Fixed height for movie cards */
+  width: 150px;  /* Reduced width */
+  height: 225px; /* Reduced height */
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
     rgb(0 0 0 / 73%) 0px 16px 10px -10px;
