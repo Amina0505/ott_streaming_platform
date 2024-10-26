@@ -1,31 +1,29 @@
-// RecentlyReleasedHindiMovies.js
+// HindiActionMovies.js
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRecentlyReleasedHindiMovies, selectRecentlyReleasedHindi } from '../features/movies/movieSlice';
+import { fetchHindiActionMovies, selectHindiAction } from '../features/movies/movieSlice'; // Adjust the import path as necessary
 
-const RecentlyReleasedHindiMovies = () => {
+const HindiActionMovies = () => {
   const dispatch = useDispatch();
-  const movies = useSelector(selectRecentlyReleasedHindi);
+  const movies = useSelector(selectHindiAction);
 
   useEffect(() => {
-    dispatch(fetchRecentlyReleasedHindiMovies());
+    dispatch(fetchHindiActionMovies());
   }, [dispatch]);
 
   return (
     <Container>
-      <h4>Recently Released Hindi Movies</h4>
+      <h4>Hindi Action Movies</h4>
       <Content>
-        {movies && movies
-          .filter(movie => movie.poster_path) // Filter movies with valid poster images
-          .map((movie) => (
-            <Wrap key={movie.id}>
-              <Link to={`/detail/${movie.id}`}>
-                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
-              </Link>
-            </Wrap>
-          ))}
+        {movies && movies.map((movie) => (
+          <Wrap key={movie.id}>
+            <Link to={`/detail/${movie.id}`}>
+              <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+            </Link>
+          </Wrap>
+        ))}
       </Content>
     </Container>
   );
@@ -55,7 +53,7 @@ const Wrap = styled.div`
   height: 300px; /* Set desired height */
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
-    rgb(0 0 0 / 73%) 0px 16px 10px -10px;
+              rgb(0 0 0 / 73%) 0px 16px 10px -10px;
   cursor: pointer;
   overflow: hidden;
   position: relative;
@@ -77,10 +75,10 @@ const Wrap = styled.div`
 
   &:hover {
     box-shadow: rgb(0 0 0 / 80%) 0px 40px 58px -16px,
-      rgb(0 0 0 / 72%) 0px 30px 22px -10px;
+                rgb(0 0 0 / 72%) 0px 30px 22px -10px;
     transform: scale(1.05);
     border-color: rgba(249, 249, 249, 0.8);
   }
 `;
 
-export default RecentlyReleasedHindiMovies;
+export default HindiActionMovies;

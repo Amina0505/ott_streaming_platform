@@ -7,8 +7,9 @@ import MalayalamUpcomingMovies from "./MalayalamLatestMovies";
 import PopularLanguages from "./PopularLanguages";
 import PopularGenres from "./PopularGenres";
 import TamilMovies from "./TamilMovies";
-import TopHindiMovies from "./RecentlyReleasedHindiMovies";
 import MalayalamDramaMovies from "./MalayalamDramaMovies";
+import ComedyRecommends from "./ComedyRecommends";
+import HindiActionMovies from "./HindiActionMovies";
 
 const Home = (props) => {
   return (
@@ -23,7 +24,8 @@ const Home = (props) => {
       <PopularGenres/>
       <TamilMovies/>
       <MalayalamDramaMovies/>
-      <TopHindiMovies/>
+      <ComedyRecommends/>
+      <HindiActionMovies/>
     </Container>
   );
 };

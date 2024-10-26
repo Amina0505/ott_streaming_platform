@@ -50,12 +50,12 @@ export const fetchLatestTamilMovies = createAsyncThunk(
   }
 );
 
-// Fetch Recently Released Hindi Movies
-export const fetchRecentlyReleasedHindiMovies = createAsyncThunk(
-  'movies/fetchRecentlyReleasedHindiMovies',
+// Fetch Recently Released Hindi Action Movies
+export const fetchHindiActionMovies = createAsyncThunk(
+  'movies/fetchHindiActionMovies',
   async () => {
     const response = await axios.get(
-      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=hi&sort_by=release_date.desc&page=1&with_original_language=hi`
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=hi&sort_by=popularity.desc&page=1&with_original_language=hi&with_genres=28` // Genre ID for Action is typically 28
     );
     return response.data.results;
   }
@@ -72,16 +72,28 @@ export const fetchMalayalamDramaMovies = createAsyncThunk(
   }
 );
 
+// Fetch Popular Comedy Movies in Malayalam
+export const fetchPopularComedyMalayalamMovies = createAsyncThunk(
+  'movies/fetchPopularComedyMalayalamMovies',
+  async () => {
+    const response = await axios.get(
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ml&sort_by=popularity.desc&page=1&with_original_language=ml&with_genres=35` // Genre ID for Comedy is typically 35
+    );
+    return response.data.results;
+  }
+);
+
 const movieSlice = createSlice({
   name: 'movies',
   initialState: {
-    recommended: [],           // State for recommended movies
-    newDisney: [],            // State for new Disney movies
-    latestMalayalam: [],      // State for latest Malayalam movies
-    latestTamil: [],          // State for latest Tamil movies
-    recentlyReleasedHindi: [], // State for recently released Hindi movies
-    malayalamDrama: [],       // State for Malayalam drama movies
-    status: 'idle',            // Can be 'idle', 'loading', 'succeeded', 'failed'
+    recommended: [],
+    newDisney: [],
+    latestMalayalam: [],
+    latestTamil: [],
+    hindiAction: [], // Add this line for Hindi action movies
+    malayalamDrama: [],
+    popularComedyMalayalam: [],
+    status: 'idle',
     error: null,
   },
   reducers: {},
@@ -135,15 +147,15 @@ const movieSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
-      // Handle Recently Released Hindi Movies
-      .addCase(fetchRecentlyReleasedHindiMovies.pending, (state) => {
+      // Handle Hindi Action Movies
+      .addCase(fetchHindiActionMovies.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchRecentlyReleasedHindiMovies.fulfilled, (state, action) => {
+      .addCase(fetchHindiActionMovies.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.recentlyReleasedHindi = action.payload;
+        state.hindiAction = action.payload; // Store Hindi action movies in the state
       })
-      .addCase(fetchRecentlyReleasedHindiMovies.rejected, (state, action) => {
+      .addCase(fetchHindiActionMovies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
@@ -158,6 +170,18 @@ const movieSlice = createSlice({
       .addCase(fetchMalayalamDramaMovies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      // Handle Popular Comedy Malayalam Movies
+      .addCase(fetchPopularComedyMalayalamMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPopularComedyMalayalamMovies.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.popularComedyMalayalam = action.payload; // Store the comedy movies in the state
+      })
+      .addCase(fetchPopularComedyMalayalamMovies.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });
@@ -167,7 +191,8 @@ export const selectRecommend = (state) => state.movies.recommended;
 export const selectNewDisney = (state) => state.movies.newDisney;
 export const selectLatestMalayalam = (state) => state.movies.latestMalayalam;
 export const selectLatestTamil = (state) => state.movies.latestTamil;
-export const selectRecentlyReleasedHindi = (state) => state.movies.recentlyReleasedHindi;
-export const selectMalayalamDrama = (state) => state.movies.malayalamDrama; // New selector for Malayalam drama movies
+export const selectHindiAction = (state) => state.movies.hindiAction; // New selector for Hindi action movies
+export const selectMalayalamDrama = (state) => state.movies.malayalamDrama; // Selector for Malayalam drama movies
+export const selectPopularComedyMalayalam = (state) => state.movies.popularComedyMalayalam; // New selector for popular comedy movies
 
 export default movieSlice.reducer;
