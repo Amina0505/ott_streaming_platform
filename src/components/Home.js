@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import ImageSlider from "./ImageSlider";
 import Viewers from "./Viewers";
+import Recommends from "./Recommends";
 
 const Home = (props) => {
   return (
@@ -8,6 +9,7 @@ const Home = (props) => {
       {/* Components removed as per your request */}
       <ImageSlider />
       <Viewers/>
+      <Recommends/>
     </Container>
   );
 };
