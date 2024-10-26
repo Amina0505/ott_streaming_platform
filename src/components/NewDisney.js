@@ -1,25 +1,25 @@
-// Recommends.js
+// NewDisney.js
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRecommendedMovies, selectRecommend } from '../features/movies/movieSlice';
+import { fetchNewDisneyMovies, selectNewDisney } from '../features/movies/movieSlice';
 
-const Recommends = () => {
+const NewDisney = (props) => {
   const dispatch = useDispatch();
-  const movies = useSelector(selectRecommend);
+  const movies = useSelector(selectNewDisney);
 
   useEffect(() => {
-    dispatch(fetchRecommendedMovies());
+    dispatch(fetchNewDisneyMovies());
   }, [dispatch]);
 
   return (
     <Container>
-      <h4>Recommended for You</h4>
+      <h4>New on Disney+</h4>
       <Content>
-        {movies && movies.map((movie) => (
-          <Wrap key={movie.id}>
-            <Link to={`/detail/${movie.id}`}>
+        {movies && movies.map((movie, key) => (
+          <Wrap key={key}>
+            <Link to={`/detail/${movie.id}`} onClick={() => console.log(`Navigating to detail page of movie ID: ${movie.id}`)}>
               <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
             </Link>
           </Wrap>
@@ -31,26 +31,30 @@ const Recommends = () => {
 
 const Container = styled.div`
   padding: 0 0 26px;
+  overflow-x: hidden; /* Hide overflow outside the container */
 `;
 
 const Content = styled.div`
   display: flex;
   gap: 25px;
-  overflow-x: auto;
+  overflow-x: auto; /* Enable horizontal scrolling */
   padding: 10px 0;
-  scroll-behavior: smooth;
+  scroll-behavior: smooth; /* Smooth scrolling */
 
+  /* Hide scrollbar for WebKit browsers */
   &::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  
+  /* Hide scrollbar for other browsers */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 `;
 
 const Wrap = styled.div`
-  flex: 0 0 auto;
-  width: 200px; /* Set desired width */
-  height: 300px; /* Set desired height */
+  flex: 0 0 auto; /* Prevent wrapping */
+  width: 200px; /* Fixed width for movie cards */
+  height: 300px; /* Fixed height for movie cards */
   border-radius: 10px;
   box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
     rgb(0 0 0 / 73%) 0px 16px 10px -10px;
@@ -81,4 +85,4 @@ const Wrap = styled.div`
   }
 `;
 
-export default Recommends;
+export default NewDisney;
