@@ -27,13 +27,25 @@ export const fetchNewDisneyMovies = createAsyncThunk(
   }
 );
 
+// Fetch Latest Malayalam Movies
+export const fetchLatestMalayalamMovies = createAsyncThunk(
+  'movies/fetchLatestMalayalamMovies',
+  async () => {
+    const response = await axios.get(
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ml&sort_by=release_date.desc&page=1&with_original_language=ml`
+    );
+    return response.data.results;
+  }
+);
+
 const movieSlice = createSlice({
   name: 'movies',
   initialState: {
-    recommended: [],
-    newDisney: [],  // New state for New Disney movies
-    status: 'idle', // can be 'idle', 'loading', 'succeeded', 'failed'
-    error: null
+    recommended: [],           // State for recommended movies
+    newDisney: [],            // State for new Disney movies
+    latestMalayalam: [],      // State for latest Malayalam movies
+    status: 'idle',            // Can be 'idle', 'loading', 'succeeded', 'failed'
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -61,12 +73,25 @@ const movieSlice = createSlice({
       .addCase(fetchNewDisneyMovies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      // Handle Latest Malayalam Movies
+      .addCase(fetchLatestMalayalamMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchLatestMalayalamMovies.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.latestMalayalam = action.payload;
+      })
+      .addCase(fetchLatestMalayalamMovies.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
-  }
+  },
 });
 
 // Selectors
 export const selectRecommend = (state) => state.movies.recommended;
-export const selectNewDisney = (state) => state.movies.newDisney; // Selector for New Disney movies
+export const selectNewDisney = (state) => state.movies.newDisney;
+export const selectLatestMalayalam = (state) => state.movies.latestMalayalam;
 
 export default movieSlice.reducer;

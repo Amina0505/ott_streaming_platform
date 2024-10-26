@@ -3,6 +3,7 @@ import ImageSlider from "./ImageSlider";
 import Viewers from "./Viewers";
 import Recommends from "./Recommends";
 import NewDisney from "./NewDisney";
+import MalayalamUpcomingMovies from "./MalayalamLatestMovies";
 
 const Home = (props) => {
   return (
@@ -12,6 +13,7 @@ const Home = (props) => {
       <Viewers/>
       <Recommends/>
       <NewDisney/>
+      <MalayalamUpcomingMovies/>
     </Container>
   );
 };
