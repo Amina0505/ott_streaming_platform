@@ -1,23 +1,24 @@
+// RecentlyReleasedHindiMovies.js
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLatestMalayalamMovies, selectLatestMalayalam } from '../features/movies/movieSlice';
+import { fetchRecentlyReleasedHindiMovies, selectRecentlyReleasedHindi } from '../features/movies/movieSlice';
 
-const LatestMalayalamMovies = () => {
+const RecentlyReleasedHindiMovies = () => {
   const dispatch = useDispatch();
-  const movies = useSelector(selectLatestMalayalam);
+  const movies = useSelector(selectRecentlyReleasedHindi);
 
   useEffect(() => {
-    dispatch(fetchLatestMalayalamMovies());
+    dispatch(fetchRecentlyReleasedHindiMovies());
   }, [dispatch]);
 
   return (
     <Container>
-      <h4>Upcoming Malayalam Movies</h4>
+      <h4>Recently Released Hindi Movies</h4>
       <Content>
         {movies && movies
-          .filter(movie => movie.poster_path) // Only show movies with a valid poster_path
+          .filter(movie => movie.poster_path) // Filter movies with valid poster images
           .map((movie) => (
             <Wrap key={movie.id}>
               <Link to={`/detail/${movie.id}`}>
@@ -82,4 +83,4 @@ const Wrap = styled.div`
   }
 `;
 
-export default LatestMalayalamMovies;
+export default RecentlyReleasedHindiMovies;

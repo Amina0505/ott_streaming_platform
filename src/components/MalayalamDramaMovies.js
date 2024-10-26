@@ -1,23 +1,36 @@
+// MalayalamDramaMovies.js
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLatestMalayalamMovies, selectLatestMalayalam } from '../features/movies/movieSlice';
+import { fetchMalayalamDramaMovies, selectMalayalamDrama } from '../features/movies/movieSlice';
 
-const LatestMalayalamMovies = () => {
+const MalayalamDramaMovies = () => {
   const dispatch = useDispatch();
-  const movies = useSelector(selectLatestMalayalam);
+  const movies = useSelector(selectMalayalamDrama);
 
   useEffect(() => {
-    dispatch(fetchLatestMalayalamMovies());
+    dispatch(fetchMalayalamDramaMovies());
   }, [dispatch]);
+
+  // Shuffle function
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+    return array;
+  };
+
+  // Shuffle movies
+  const shuffledMovies = shuffleArray([...movies]); // Use a copy of the movies array
 
   return (
     <Container>
-      <h4>Upcoming Malayalam Movies</h4>
+      <h4>Malayalam Drama Movies</h4>
       <Content>
-        {movies && movies
-          .filter(movie => movie.poster_path) // Only show movies with a valid poster_path
+        {shuffledMovies && shuffledMovies
+          .filter(movie => movie.poster_path) // Filter movies with valid poster images
           .map((movie) => (
             <Wrap key={movie.id}>
               <Link to={`/detail/${movie.id}`}>
@@ -82,4 +95,4 @@ const Wrap = styled.div`
   }
 `;
 
-export default LatestMalayalamMovies;
+export default MalayalamDramaMovies;

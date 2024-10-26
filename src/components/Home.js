@@ -4,6 +4,11 @@ import Viewers from "./Viewers";
 import Recommends from "./Recommends";
 import NewDisney from "./NewDisney";
 import MalayalamUpcomingMovies from "./MalayalamLatestMovies";
+import PopularLanguages from "./PopularLanguages";
+import PopularGenres from "./PopularGenres";
+import TamilMovies from "./TamilMovies";
+import TopHindiMovies from "./RecentlyReleasedHindiMovies";
+import MalayalamDramaMovies from "./MalayalamDramaMovies";
 
 const Home = (props) => {
   return (
@@ -14,6 +19,11 @@ const Home = (props) => {
       <Recommends/>
       <NewDisney/>
       <MalayalamUpcomingMovies/>
+      <PopularLanguages/>
+      <PopularGenres/>
+      <TamilMovies/>
+      <MalayalamDramaMovies/>
+      <TopHindiMovies/>
     </Container>
   );
 };

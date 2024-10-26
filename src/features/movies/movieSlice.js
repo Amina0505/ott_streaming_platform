@@ -1,3 +1,4 @@
+// movieSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -38,12 +39,48 @@ export const fetchLatestMalayalamMovies = createAsyncThunk(
   }
 );
 
+// Fetch Latest Tamil Movies
+export const fetchLatestTamilMovies = createAsyncThunk(
+  'movies/fetchLatestTamilMovies',
+  async () => {
+    const response = await axios.get(
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ta&sort_by=release_date.desc&page=1&with_original_language=ta`
+    );
+    return response.data.results;
+  }
+);
+
+// Fetch Recently Released Hindi Movies
+export const fetchRecentlyReleasedHindiMovies = createAsyncThunk(
+  'movies/fetchRecentlyReleasedHindiMovies',
+  async () => {
+    const response = await axios.get(
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=hi&sort_by=release_date.desc&page=1&with_original_language=hi`
+    );
+    return response.data.results;
+  }
+);
+
+// Fetch Malayalam Drama Movies
+export const fetchMalayalamDramaMovies = createAsyncThunk(
+  'movies/fetchMalayalamDramaMovies',
+  async () => {
+    const response = await axios.get(
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ml&sort_by=release_date.desc&page=1&with_original_language=ml&with_genres=18` // Genre ID for Drama is typically 18
+    );
+    return response.data.results;
+  }
+);
+
 const movieSlice = createSlice({
   name: 'movies',
   initialState: {
     recommended: [],           // State for recommended movies
     newDisney: [],            // State for new Disney movies
     latestMalayalam: [],      // State for latest Malayalam movies
+    latestTamil: [],          // State for latest Tamil movies
+    recentlyReleasedHindi: [], // State for recently released Hindi movies
+    malayalamDrama: [],       // State for Malayalam drama movies
     status: 'idle',            // Can be 'idle', 'loading', 'succeeded', 'failed'
     error: null,
   },
@@ -85,6 +122,42 @@ const movieSlice = createSlice({
       .addCase(fetchLatestMalayalamMovies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      // Handle Latest Tamil Movies
+      .addCase(fetchLatestTamilMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchLatestTamilMovies.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.latestTamil = action.payload;
+      })
+      .addCase(fetchLatestTamilMovies.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      // Handle Recently Released Hindi Movies
+      .addCase(fetchRecentlyReleasedHindiMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchRecentlyReleasedHindiMovies.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.recentlyReleasedHindi = action.payload;
+      })
+      .addCase(fetchRecentlyReleasedHindiMovies.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      // Handle Malayalam Drama Movies
+      .addCase(fetchMalayalamDramaMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchMalayalamDramaMovies.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.malayalamDrama = action.payload;
+      })
+      .addCase(fetchMalayalamDramaMovies.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });
@@ -93,5 +166,8 @@ const movieSlice = createSlice({
 export const selectRecommend = (state) => state.movies.recommended;
 export const selectNewDisney = (state) => state.movies.newDisney;
 export const selectLatestMalayalam = (state) => state.movies.latestMalayalam;
+export const selectLatestTamil = (state) => state.movies.latestTamil;
+export const selectRecentlyReleasedHindi = (state) => state.movies.recentlyReleasedHindi;
+export const selectMalayalamDrama = (state) => state.movies.malayalamDrama; // New selector for Malayalam drama movies
 
 export default movieSlice.reducer;
