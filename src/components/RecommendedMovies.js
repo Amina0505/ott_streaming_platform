@@ -1,25 +1,19 @@
-// components/HindiActionMovies.jsx
+// components/RecommendedMovies.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { fetchActionMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
+import { fetchPopularMovies } from "../services/tmdb"; // Adjust the path as needed
 import { Link } from 'react-router-dom';
 
-const ACTION_GENRE_ID = 28; // Action genre ID
-
-const HindiActionMovies = () => {
+const RecommendedMovies = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
         const loadMovies = async () => {
             try {
-                // Fetch Hindi action movies
-                const hindiActionMovies = await fetchActionMoviesByLanguage("hi", ACTION_GENRE_ID);
-
-                // Limit to 10 movies
-                const limitedMovies = hindiActionMovies.slice(0, 10);
-                setMovies(limitedMovies);
+                const moviesData = await fetchPopularMovies();
+                setMovies(moviesData);
             } catch (error) {
-                console.error("Failed to load Hindi action movies:", error);
+                console.error("Failed to load movies:", error);
             }
         };
 
@@ -28,11 +22,11 @@ const HindiActionMovies = () => {
 
     return (
         <Container>
-            <h4>Hindi Action Movies</h4>
+            <h4>Recommended Movies</h4>
             <Content>
                 {movies.map((movie) => (
                     <Wrap key={movie.id}>
-                        <Link to={`/movie/${movie.id}`}> {/* Link to movie details */}
+                        <Link to={`/movie/${movie.id}`}>
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                                 alt={movie.title}
@@ -97,4 +91,4 @@ const Wrap = styled.div`
     }
 `;
 
-export default HindiActionMovies;
+export default RecommendedMovies;

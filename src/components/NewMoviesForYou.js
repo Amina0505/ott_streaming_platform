@@ -1,25 +1,38 @@
-// components/HindiActionMovies.jsx
+// components/NewMoviesForYou.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { fetchActionMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
+import { fetchMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
 import { Link } from 'react-router-dom';
 
-const ACTION_GENRE_ID = 28; // Action genre ID
-
-const HindiActionMovies = () => {
+const NewMoviesForYou = () => {
     const [movies, setMovies] = useState([]);
+
+    // Function to shuffle an array
+    const shuffleArray = (array) => {
+        return array.sort(() => Math.random() - 0.5);
+    };
 
     useEffect(() => {
         const loadMovies = async () => {
             try {
-                // Fetch Hindi action movies
-                const hindiActionMovies = await fetchActionMoviesByLanguage("hi", ACTION_GENRE_ID);
+                // Fetch movies from multiple languages
+                const englishMovies = await fetchMoviesByLanguage("en");
+                const malayalamMovies = await fetchMoviesByLanguage("ml");
+                const tamilMovies = await fetchMoviesByLanguage("ta");
+                const hindiMovies = await fetchMoviesByLanguage("hi");
 
-                // Limit to 10 movies
-                const limitedMovies = hindiActionMovies.slice(0, 10);
-                setMovies(limitedMovies);
+                // Combine the movies into one array and shuffle them
+                const combinedMovies = [
+                    ...englishMovies.slice(0, 5),  // Limit to 5 movies from each language
+                    ...malayalamMovies.slice(0, 5),
+                    ...tamilMovies.slice(0, 5),
+                    ...hindiMovies.slice(0, 5),
+                ];
+
+                const shuffledMovies = shuffleArray(combinedMovies);
+                setMovies(shuffledMovies);
             } catch (error) {
-                console.error("Failed to load Hindi action movies:", error);
+                console.error("Failed to load movies:", error);
             }
         };
 
@@ -28,11 +41,11 @@ const HindiActionMovies = () => {
 
     return (
         <Container>
-            <h4>Hindi Action Movies</h4>
+            <h4>New Movies for You</h4>
             <Content>
                 {movies.map((movie) => (
                     <Wrap key={movie.id}>
-                        <Link to={`/movie/${movie.id}`}> {/* Link to movie details */}
+                        <Link to={`/movie/${movie.id}`}>
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                                 alt={movie.title}
@@ -97,4 +110,4 @@ const Wrap = styled.div`
     }
 `;
 
-export default HindiActionMovies;
+export default NewMoviesForYou;

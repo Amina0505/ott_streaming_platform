@@ -1,25 +1,34 @@
-// components/HindiActionMovies.jsx
+// components/EntertainmentMoviesForYou.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { fetchActionMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
+import { fetchEntertainmentMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
 import { Link } from 'react-router-dom';
 
-const ACTION_GENRE_ID = 28; // Action genre ID
+const ENTERTAINMENT_GENRE_ID = 28; // Action genre ID. Adjust as needed for other entertainment genres.
 
-const HindiActionMovies = () => {
+const EntertainmentMoviesForYou = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
         const loadMovies = async () => {
             try {
-                // Fetch Hindi action movies
-                const hindiActionMovies = await fetchActionMoviesByLanguage("hi", ACTION_GENRE_ID);
+                // Fetch entertainment movies from multiple languages
+                const englishMovies = await fetchEntertainmentMoviesByLanguage("en", ENTERTAINMENT_GENRE_ID);
+                const malayalamMovies = await fetchEntertainmentMoviesByLanguage("ml", ENTERTAINMENT_GENRE_ID);
+                const tamilMovies = await fetchEntertainmentMoviesByLanguage("ta", ENTERTAINMENT_GENRE_ID);
+                const hindiMovies = await fetchEntertainmentMoviesByLanguage("hi", ENTERTAINMENT_GENRE_ID);
 
-                // Limit to 10 movies
-                const limitedMovies = hindiActionMovies.slice(0, 10);
-                setMovies(limitedMovies);
+                // Combine the movies into one array
+                const combinedMovies = [
+                    ...englishMovies.slice(0, 5),  // Limit to 5 movies from each language
+                    ...malayalamMovies.slice(0, 5),
+                    ...tamilMovies.slice(0, 5),
+                    ...hindiMovies.slice(0, 5),
+                ];
+
+                setMovies(combinedMovies); // Set movies without shuffling for consistency
             } catch (error) {
-                console.error("Failed to load Hindi action movies:", error);
+                console.error("Failed to load entertainment movies:", error);
             }
         };
 
@@ -28,11 +37,11 @@ const HindiActionMovies = () => {
 
     return (
         <Container>
-            <h4>Hindi Action Movies</h4>
+            <h4>Entertainment Movies</h4>
             <Content>
                 {movies.map((movie) => (
                     <Wrap key={movie.id}>
-                        <Link to={`/movie/${movie.id}`}> {/* Link to movie details */}
+                        <Link to={`/movie/${movie.id}`}>
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                                 alt={movie.title}
@@ -97,4 +106,4 @@ const Wrap = styled.div`
     }
 `;
 
-export default HindiActionMovies;
+export default EntertainmentMoviesForYou;

@@ -1,25 +1,36 @@
-// components/HindiActionMovies.jsx
+// components/RomanticIndianMovies.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { fetchActionMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
+import { fetchRomanticMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
 import { Link } from 'react-router-dom';
 
-const ACTION_GENRE_ID = 28; // Action genre ID
+const ROMANCE_GENRE_ID = 10749; // Romance genre ID
 
-const HindiActionMovies = () => {
+const RomanticIndianMovies = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
         const loadMovies = async () => {
             try {
-                // Fetch Hindi action movies
-                const hindiActionMovies = await fetchActionMoviesByLanguage("hi", ACTION_GENRE_ID);
+                // Fetch romantic movies from multiple Indian languages
+                const hindiRomance = await fetchRomanticMoviesByLanguage("hi", ROMANCE_GENRE_ID);
+                const tamilRomance = await fetchRomanticMoviesByLanguage("ta", ROMANCE_GENRE_ID);
+                const teluguRomance = await fetchRomanticMoviesByLanguage("te", ROMANCE_GENRE_ID);
+                const malayalamRomance = await fetchRomanticMoviesByLanguage("ml", ROMANCE_GENRE_ID);
 
-                // Limit to 10 movies
-                const limitedMovies = hindiActionMovies.slice(0, 10);
-                setMovies(limitedMovies);
+                // Combine the movies into one array and limit to 5 from each language
+                const combinedMovies = [
+                    ...hindiRomance.slice(0, 5),
+                    ...tamilRomance.slice(0, 5),
+                    ...teluguRomance.slice(0, 5),
+                    ...malayalamRomance.slice(0, 5),
+                ];
+
+                // Shuffle the combined movies
+                const shuffledMovies = combinedMovies.sort(() => Math.random() - 0.5);
+                setMovies(shuffledMovies);
             } catch (error) {
-                console.error("Failed to load Hindi action movies:", error);
+                console.error("Failed to load romantic Indian movies:", error);
             }
         };
 
@@ -28,7 +39,7 @@ const HindiActionMovies = () => {
 
     return (
         <Container>
-            <h4>Hindi Action Movies</h4>
+            <h4>Romantic Movies</h4>
             <Content>
                 {movies.map((movie) => (
                     <Wrap key={movie.id}>
@@ -97,4 +108,4 @@ const Wrap = styled.div`
     }
 `;
 
-export default HindiActionMovies;
+export default RomanticIndianMovies;

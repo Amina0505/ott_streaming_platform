@@ -1,25 +1,28 @@
-// components/HindiActionMovies.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { fetchActionMoviesByLanguage } from "../services/tmdb"; // Adjust the path as needed
+import { fetchPopularMoviesByGenreAndLanguage } from "../services/tmdb"; // Adjust the path as needed
 import { Link } from 'react-router-dom';
 
-const ACTION_GENRE_ID = 28; // Action genre ID
+const LANGUAGES = ["hi", "ta", "te", "ml"]; // Hindi, Tamil, Telugu, Malayalam
 
-const HindiActionMovies = () => {
+const IndianHorrorMovies = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
         const loadMovies = async () => {
             try {
-                // Fetch Hindi action movies
-                const hindiActionMovies = await fetchActionMoviesByLanguage("hi", ACTION_GENRE_ID);
+                // Fetch movies for each language and genre (Horror)
+                const genreId = 27; // Horror genre ID
+                const languagePromises = LANGUAGES.map(language =>
+                    fetchPopularMoviesByGenreAndLanguage(genreId, language)
+                );
+                const languageResults = await Promise.all(languagePromises);
 
-                // Limit to 10 movies
-                const limitedMovies = hindiActionMovies.slice(0, 10);
-                setMovies(limitedMovies);
+                // Combine all movies from different languages
+                const combinedMovies = languageResults.flat().slice(0, 20); // Limit to 20 movies
+                setMovies(combinedMovies);
             } catch (error) {
-                console.error("Failed to load Hindi action movies:", error);
+                console.error("Failed to load Indian horror movies:", error);
             }
         };
 
@@ -28,7 +31,7 @@ const HindiActionMovies = () => {
 
     return (
         <Container>
-            <h4>Hindi Action Movies</h4>
+            <h4>Horror Movies</h4>
             <Content>
                 {movies.map((movie) => (
                     <Wrap key={movie.id}>
@@ -45,7 +48,7 @@ const HindiActionMovies = () => {
     );
 };
 
-const Container = styled.div`
+const Container = styled.section`
     padding: 0 0 26px;
 `;
 
@@ -97,4 +100,4 @@ const Wrap = styled.div`
     }
 `;
 
-export default HindiActionMovies;
+export default IndianHorrorMovies;
