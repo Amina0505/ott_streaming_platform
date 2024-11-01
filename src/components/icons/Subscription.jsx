@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes ,css} from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 import { motion } from 'framer-motion'; // Import Framer Motion
 
-const TMDB_API_KEY = 'cfacde6feddbad78398140097c11dea4'; // Replace with your TMDB API Key
+const TMDB_API_KEY = 'e0e0d8b5cc964b11285715d5eef3642e'; // Replace with your TMDB API Key
 const TMDB_API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`;
 
 const Subscription = () => {
@@ -88,7 +88,9 @@ const Subscription = () => {
   };
 
   const handleContinuePay = () => {
-    console.log(`Continuing to pay for ${selectedBox === 'box1' ? planDetails.box1.title : planDetails.box2.title}`);
+    // Navigate to PaymentForm and pass selected plan details
+    const selectedPlanDetails = selectedBox === 'box1' ? planDetails.box1 : planDetails.box2;
+    navigate('/payment', { state: { plan: selectedPlanDetails } });
   };
 
   return (
@@ -97,10 +99,8 @@ const Subscription = () => {
         <CloseButton onClick={handleClose}>
           <FaTimes />
         </CloseButton>
-        {/* <Logo src="https://img10.hotstar.com/image/upload/f_auto,q_90,w_256/v1656431456/web-images/logo-d-plus.svg" alt="Disney+ Hotstar Logo" /> */}
       </Header>
       <Container>
-
         <TableContainer>
           <TableHeading>Subscription Plan</TableHeading>
           <Table>
@@ -204,6 +204,7 @@ const Subscription = () => {
     </GradientBackground>
   );
 };
+
 
 const MovieGrid = styled.div`
   display: grid;

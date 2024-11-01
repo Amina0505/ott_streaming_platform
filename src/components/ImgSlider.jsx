@@ -3,8 +3,6 @@ import styled from "styled-components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 
 const ImgSlider = () => {
@@ -12,49 +10,44 @@ const ImgSlider = () => {
   const [movies, setMovies] = useState([]);
   const [opacity, setOpacity] = useState(1);
   const sliderRef = useRef(null);
-  
+
   const API_KEY = 'cfacde6feddbad78398140097c11dea4'; // Replace with your TMDB API key
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        // Fetch trending movies
         const responseTrending = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`);
         const dataTrending = await responseTrending.json();
-        
-        // Fetch Indian movies (e.g., using the 'language' parameter for Hindi)
+
         const responseIndian = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=hi-IN&sort_by=popularity.desc`);
         const dataIndian = await responseIndian.json();
-        
-        // Fetch a trending Malayalam movie
+
         const responseMalayalam = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=ml&sort_by=popularity.desc`);
         const dataMalayalam = await responseMalayalam.json();
 
-        // Combine the movie arrays and remove duplicates by movie ID
         const combinedMovies = [
           ...dataTrending.results,
           ...dataIndian.results,
-          dataMalayalam.results[0] // Adding one trending Malayalam movie
+          dataMalayalam.results[0]
         ];
 
-        // Filter out movies without a description and remove duplicates
         const uniqueMovies = combinedMovies
           .filter((movie, index, self) => movie.overview && self.findIndex(m => m.id === movie.id) === index)
-          .slice(0, 5); // Limit to the first 5 unique movies with descriptions
+          .slice(0, 5);
 
         setMovies(uniqueMovies);
       } catch (error) {
         console.error('Error fetching movies:', error);
       }
     };
-    
+
     fetchMovies();
   }, [API_KEY]);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const newOpacity = Math.max(1 - scrollY / 500, 0); // Adjust the divisor for fade speed
+      const newOpacity = Math.max(1 - scrollY / 500, 0);
       setOpacity(newOpacity);
     };
 
@@ -110,15 +103,6 @@ const ImgSlider = () => {
                 <Year>{new Date(movie.release_date).getFullYear()}</Year> | <Genre>{movie.genre_ids.join(', ')}</Genre>
               </Details>
               <Description>{movie.overview}</Description>
-              <Buttons>
-                <SubscribeButton>
-                  <FontAwesomeIcon icon={faPlay} />
-                  Subscribe to Watch
-                </SubscribeButton>
-                <WatchlistButton>
-                  <PlusIcon>+</PlusIcon>
-                </WatchlistButton>
-              </Buttons>
             </Content>
           </Slide>
         ))}
@@ -241,58 +225,6 @@ const Description = styled.p`
   font-size: 1rem;
   line-height: 1.5;
   margin-bottom: 20px;
-`;
-
-// Buttons container (Subscribe and Watchlist)
-const Buttons = styled.div`
-  display: flex;
-  gap: 15px;
-`;
-
-// Subscribe button with custom font style
-const SubscribeButton = styled.button`
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  opacity: 0.8;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-`;
-
-// Watchlist button with a plus icon
-const WatchlistButton = styled.button`
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 10px;
-  font-size: 1.5rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-`;
-
-const PlusIcon = styled.span`
-  font-size: 2rem;
-  font-family: "Arial", sans-serif;
 `;
 
 // Thumbnail container and individual thumbnails

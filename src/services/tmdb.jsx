@@ -1,19 +1,58 @@
 // services/tmdb.js
 import axios from "axios";
 
-const API_KEY = "cfacde6feddbad78398140097c11dea4"; // Replace with your actual TMDB API key
+const API_KEY = "e0e0d8b5cc964b11285715d5eef3642e"; // Replace with your actual TMDB API key
 const BASE_URL = "https://api.themoviedb.org/3";
 
 // Fetch popular movies
 export const fetchPopularMovies = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`);
+        const response = await axios.get(`${BASE_URL}/movie/popular`, {
+            params: {
+                api_key: API_KEY,
+                language: 'en-US',
+                page: 1,
+            },
+        });
         return response.data.results;
     } catch (error) {
-        console.error("Failed to fetch movies:", error);
+        console.error("Failed to fetch popular movies:", error);
         throw error;
     }
 };
+
+// Fetch movie by ID
+export const fetchMovieById = async (id) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/movie/${id}`, {
+            params: {
+                api_key: API_KEY,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching movie by ID:", error);
+        throw error;
+    }
+};
+
+// Fetch similar movies
+export const fetchSimilarMovies = async (id) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/movie/${id}/similar`, {
+            params: {
+                api_key: API_KEY,
+                page: 1,
+            },
+        });
+        return response.data.results;
+    } catch (error) {
+        console.error("Error fetching similar movies:", error);
+        throw error;
+    }
+};
+
+// Additional functions as necessary...
 
 // Fetch trending Malayalam movies based on original language
 export const fetchTrendingMalayalamMovies = async () => {
@@ -117,37 +156,6 @@ export const fetchTamilThrillerMovies = async () => {
     }
 };
 
-export const fetchMovieById = async (id) => {
-    try {
-      const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch movie data');
-      }
-      
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching movie by ID:', error);
-      throw error; // Rethrow the error to be handled by the caller
-    }
-  };
-  
-  export const fetchSimilarMovies = async (id, count) => {
-    try {
-      const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${API_KEY}&page=1`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch similar movies');
-      }
-      
-      const data = await response.json();
-      return data.results.slice(0, count); // Return only the specified number of movies
-    } catch (error) {
-      console.error('Error fetching similar movies:', error);
-      throw error;
-    }
-  };
   
 
 // Fetch popular Indian movies

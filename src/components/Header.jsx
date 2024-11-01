@@ -65,7 +65,7 @@ const Header = () => {
       {location.pathname !== '/' && location.pathname !== '/subscription' && (
         <Nav>
           <Logo>
-            <img src="/images/logo.svg" alt="Logo" />
+            <img src="/images/logo-new.png" alt="Logo" />
           </Logo>
           {userName && (
             <NavMenu>
@@ -120,17 +120,18 @@ const Nav = styled.nav`
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 `;
 
-const Logo = styled.a`
-  padding: 0;
-  width: 60px;
-  margin-bottom: 20px;
-  max-height: 60px;
-  font-size: 0;
-  display: inline-block;
+const Logo = styled(Link)`
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
-    display: block;
     width: 100%;
+    height: auto;
+    object-fit: contain;
   }
 `;
 

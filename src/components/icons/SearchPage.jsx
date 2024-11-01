@@ -10,7 +10,7 @@ const SearchPage = () => {
   const navigate = useNavigate();
 
   // API Key for TMDB
-  const API_KEY = 'cfacde6feddbad78398140097c11dea4'; // Replace with your TMDB API key
+  const API_KEY = 'e0e0d8b5cc964b11285715d5eef3642e'; // Replace with your TMDB API key
 
   // Fetch trending movies when the component mounts
   useEffect(() => {
